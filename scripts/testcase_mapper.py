@@ -1,17 +1,30 @@
 import json
 import sys
+import re
 
 def load_testcases(json_path):
     with open(json_path, 'r') as file:
         return json.load(file)
 
+def split_keywords(text):
+    # Split camelCase or PascalCase words, remove file extension
+    words = re.findall(r'[A-Z]?[a-z]+|[A-Z]+(?![a-z])', text)
+    return [word.lower() for word in words]
+
 def map_tests(changed_files, testcases):
-    keywords = [file.split('/')[-1].split('.')[0].lower() for file in changed_files]
+    keywords = []
+    for file in changed_files:
+        filename = file.split('/')[-1].split('.')[0]  # Get file name without extension
+        keywords.extend(split_keywords(filename))     # Split into separate words
+
     suggested = []
 
     for testcase in testcases:
-        if any(keyword in testcase["name"].lower() or keyword in testcase["folder"].lower() for keyword in keywords):
-            suggested.append(testcase["name"])
+        tc_name = testcase.get("name", "").lower()
+        tc_folder = testcase.get("folder", "").lower()
+
+        if any(keyword in tc_name or keyword in tc_folder for keyword in keywords):
+            suggested.append(testcase.get("name"))
 
     return suggested
 
