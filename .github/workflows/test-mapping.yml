@@ -13,7 +13,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          fetch-depth: 2  # ⭐️ This fetches the last 2 commits
+          fetch-depth: 2
 
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -31,3 +31,9 @@ jobs:
           python scripts/testcase_mapper.py changed_files.txt testcases/testcases.json > suggested_tests.txt
           echo "Suggested Test Cases:"
           cat suggested_tests.txt
+
+      - name: Upload Suggested Test Cases as Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: suggested-test-cases
+          path: suggested_tests.txt
