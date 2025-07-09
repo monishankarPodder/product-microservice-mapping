@@ -1,0 +1,4 @@
+[
+  {"name": "Validate product creation", "folder": "Product Service", "id": "TC-101"},
+  {"name": "Test product deletion", "folder": "Product Service", "id": "TC-102"}
+]
